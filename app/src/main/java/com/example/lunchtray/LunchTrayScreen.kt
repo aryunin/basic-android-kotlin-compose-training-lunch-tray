@@ -15,8 +15,8 @@
  */
 package com.example.lunchtray
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,9 +26,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.lunchtray.datasource.DataSource
 import com.example.lunchtray.ui.AccompanimentMenuScreen
+import com.example.lunchtray.ui.AppBar
 import com.example.lunchtray.ui.CheckoutScreen
 import com.example.lunchtray.ui.EntreeMenuScreen
 import com.example.lunchtray.ui.OrderViewModel
@@ -40,19 +42,25 @@ import com.example.lunchtray.ui.StartOrderScreen
 
 // TODO: AppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LunchTrayApp(
     navController: NavHostController = rememberNavController()
 ) {
-    // TODO: Create Controller and initialization
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route ?: Screen.Start.name
+    val currentScreen = Screen.valueOf(currentRoute)
+    val canNavigateBack = navController.previousBackStackEntry != null
 
     // Create ViewModel
     val viewModel: OrderViewModel = viewModel()
 
     Scaffold(
         topBar = {
-            // TODO: AppBar
+            AppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = canNavigateBack,
+                navigateUp = navController::navigateUp,
+            )
         }
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
@@ -66,7 +74,8 @@ fun LunchTrayApp(
                 StartOrderScreen(
                     onStartOrderButtonClicked = {
                         navController.navigate(Screen.EntreeMenu.name)
-                    }
+                    },
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             composable(route = Screen.EntreeMenu.name) {
