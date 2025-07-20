@@ -18,6 +18,8 @@ package com.example.lunchtray
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -128,7 +131,8 @@ fun LunchTrayApp(
                     },
                     onSelectionChanged = {
                         viewModel.updateEntree(it)
-                    }
+                    },
+                    modifier = Modifier.verticalScroll(rememberScrollState())
                 )
             }
             composable(route = Screen.SideDishMenu.name) {
@@ -142,7 +146,8 @@ fun LunchTrayApp(
                     },
                     onSelectionChanged = {
                         viewModel.updateSideDish(it)
-                    }
+                    },
+                    modifier = Modifier.verticalScroll(rememberScrollState())
                 )
             }
             composable(route = Screen.AccompanimentMenu.name) {
@@ -156,7 +161,8 @@ fun LunchTrayApp(
                     },
                     onSelectionChanged = {
                         viewModel.updateAccompaniment(it)
-                    }
+                    },
+                    modifier = Modifier.verticalScroll(rememberScrollState())
                 )
             }
             composable(route = Screen.Checkout.name) {
@@ -167,7 +173,10 @@ fun LunchTrayApp(
                     },
                     onCancelButtonClicked = {
                         cancel(viewModel, navController)
-                    }
+                    },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(dimensionResource(R.dimen.padding_medium))
                 )
             }
         }
